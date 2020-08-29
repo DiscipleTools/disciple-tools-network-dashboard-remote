@@ -1,26 +1,30 @@
 {
   "name": "Disciple Tools - Network Dashboard Remote",
-  "version": "0.1.0",
-  "download_url": "https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote-template/releases/download/0.1.0/disciple-tools-network-dashboard-remote.zip",
+
+  "version": "1.0",
+  "download_url": "https://github.com/DiscipleTools/disciple-tools-network-dashboard/releases/download/1.0/disciple-tools-network-dashboard-remote.zip",
   "sections": {
-    "description": "Disciple Tools - Network Dashboard Remote.",
+    "description": "The Network Dashboard Remote plugin extends to non-disciple.tools Wordpress systems a simple REST and authentication capacity to log movement activity to the network dashboard.",
     "installation": "(Required) You must have Disciple.Tools Theme installed before using this plugin. Once Disciple.Tools is installed, you can use the normal Plugin system to install the plugin.",
-    "changelog": ""
+    "changelog": "Initialization of the plugin."
   },
-  "last_updated": "2018-1-24",
-  "upgrade_notice": "Here's why you should upgrade...",
+  "last_updated": "2020-08",
+  "upgrade_notice": "Initialization",
+
   "requires": "4.7",
-  "tested": "5.4.2",
+  "tested": "5.5",
   "banners": {
     "low": "https://raw.githubusercontent.com/DiscipleTools/disciple-tools-version-control/master/images/dt-placeholder-772x250.jpg",
     "high": "https://raw.githubusercontent.com/DiscipleTools/disciple-tools-version-control/master/images/dt-placeholder-1544x500.jpg"
   },
+
   "author": "Disciple Tools",
   "author_homepage": "https://disciple.tools",
-  "homepage": "https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote-template",
-  "issues_url": "https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote-template/issues",
-  "projects_url": "https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote-template/projects",
-  "wiki_url": "https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote-template/wiki",
-  "license_url": "https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote-template/blob/master/LICENSE",
-  "readme_url": ""
+
+  "homepage": "https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote",
+  "issues_url": "https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote/issues",
+  "projects_url": "https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote/projects",
+  "wiki_url": "",
+  "license_url": "https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote/blob/master/LICENSE",
+  "readme_url": "https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote/blob/master/README.md"
 }

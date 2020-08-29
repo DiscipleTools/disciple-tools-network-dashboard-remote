@@ -156,19 +156,8 @@ class DT_ND_Remote {
             if ( ! class_exists( 'Puc_v4_Factory' ) ) {
                 require( 'includes/admin/plugin-update-checker/plugin-update-checker.php' );
             }
-            /**
-             * Below is the publicly hosted .json file that carries the version information. This file can be hosted
-             * anywhere as long as it is publicly accessible. You can download the version file listed below and use it as
-             * a template.
-             * Also, see the instructions for version updating to understand the steps involved.
-             * @see https://github.com/DiscipleTools/disciple-tools-version-control/wiki/How-to-Update-the-Starter-Plugin
-             * @todo enable this section with your own hosted file
-             * @todo An example of this file can be found in /includes/admin/disciple-tools-network-dashboard-remote-version-control.json
-             * @todo It is recommended to host this version control file outside the project itself. Github is a good option for delivering static json.
-             */
 
-
-            $hosted_json = "https://raw.githubusercontent.com/DiscipleTools/disciple-tools-version-control/master/disciple-tools-network-dashboard-remote-version-control.json"; // @todo change this url
+            $hosted_json = "https://raw.githubusercontent.com/DiscipleTools/disciple-tools-network-dashboard-remote/master/includes/admin/version-control.json";
             Puc_v4_Factory::buildUpdateChecker(
                 $hosted_json,
                 __FILE__,
