@@ -4,38 +4,18 @@ if ( ! defined( 'ABSPATH' ) ) { exit; } // Exit if accessed directly
  * Configures the site link system for the network reporting
  */
 
-class DT_ND_Remote_Site_Links {
-    public $type = 'dt_nd_remote';
-
-    private static $_instance = null;
-    public static function instance() {
-        if ( is_null( self::$_instance ) ) {
-            self::$_instance = new self();
-        }
-        return self::$_instance;
-    } // End instance()
-
-    public function __construct() {
-        // Add the specific capabilities needed for the site to site linking.
-        add_filter( 'site_link_type_capabilities', [ $this, 'site_link_capabilities' ], 10, 1 );
-
-        // Adds the type to the site link system
-        add_filter( 'site_link_type', [ $this, 'site_link_type' ], 10, 1 );
-    }
-
-    public function site_link_capabilities( $args ) {
-        if ( $this->type === $args['connection_type'] ) {
-            $args['capabilities'][] = 'create_' . $this->type;
-            $args['capabilities'][] = 'update_any_' . $this->type;
-            // @todo add other capabilities here
-        }
-        return $args;
-    }
-
-    public function site_link_type( $type ) {
-        $type[$this->type] = __( 'Network Dashboard Remote' );
-        return $type;
-    }
+// Adds the type of network connection to the site link system
+add_filter( 'site_link_type', 'dt_nd_remote_site_link_type', 10, 1 );
+function dt_nd_remote_site_link_type( $type ) {
+    $type['network_dashboard_sending'] = __('Network Dashboard Sending Only');
+    return $type;
 }
-DT_ND_Remote_Site_Links::instance();
 
+// Add the specific capabilities needed for the site to site linking.
+add_filter( 'site_link_type_capabilities', 'dt_nd_remote_site_link_capabilities', 10, 1 );
+function dt_nd_remote_site_link_capabilities( $args ) {
+    if ( 'network_dashboard_sending' === $args['connection_type'] ) {
+        $args['capabilities'][] = 'network_dashboard_sending';
+    }
+    return $args;
+}

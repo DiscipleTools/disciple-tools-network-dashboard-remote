@@ -31,9 +31,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 function dt_nd_remote() {
     $wp_theme = wp_get_theme();
 
-    /*
-     * Check if the Disciple.Tools theme is loaded and is the latest required version
-     */
     $is_theme_dt = strpos( $wp_theme->get_template(), "disciple-tools-theme" ) !== false || $wp_theme->name === "Disciple Tools";
     if ( ! $is_theme_dt ) {
         return DT_ND_Remote::get_instance();
@@ -102,6 +99,11 @@ class DT_ND_Remote {
      * @return void
      */
     private function includes() {
+        require_once( 'includes/site-link-post-type.php' );
+        require_once( 'includes/shortcode.php' );
+        require_once( 'includes/header-script.php' );
+        require_once( 'includes/site-profile.php' );
+
         if ( is_admin() ) {
             require_once( 'includes/admin/admin-menu-and-tabs.php' );
         }
@@ -130,16 +132,9 @@ class DT_ND_Remote {
         $this->token             = 'dt_nd_remote';
         $this->version             = '1.0';
 
-
         // sample rest api class
         require_once( 'includes/rest-api.php' );
-
-        // sample post type class
-        require_once( 'includes/post-type.php' );
-
-        // custom site to site links
         require_once( 'includes/custom-site-to-site-links.php' );
-
     }
 
     /**
@@ -163,8 +158,6 @@ class DT_ND_Remote {
                 __FILE__,
                 'disciple-tools-network-dashboard-remote'
             );
-
-
         }
 
         // Internationalize the text strings used.
@@ -191,7 +184,9 @@ class DT_ND_Remote {
         if ( strpos( $plugin_file_name, basename( __FILE__ ) ) ) {
             // You can still use `array_unshift()` to add links at the beginning.
 
-            $links_array[] = '<a href="https://disciple.tools">Disciple.Tools Community</a>'; // @todo replace with your links.
+            $links_array[] = '<a href="https://disciple.tools">Disciple.Tools Community</a>';
+            $links_array[] = '<a href="https://github.com/DiscipleTools/disciple-tools-network-dashboard">Network Dashboard Plugin</a>';
+            $links_array[] = '<a href="https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote">Github Project</a>';
 
             // add other links here
         }
@@ -292,47 +287,3 @@ class DT_ND_Remote {
 // Register activation hook.
 register_activation_hook( __FILE__, [ 'DT_ND_Remote', 'activation' ] );
 register_deactivation_hook( __FILE__, [ 'DT_ND_Remote', 'deactivation' ] );
-
-function dt_nd_remote_hook_admin_notice() {
-    global $dt_nd_remote_required_dt_theme_version;
-    $wp_theme = wp_get_theme();
-    $current_version = $wp_theme->version;
-    $message = __( "'Disciple Tools - Network Dashboard Remote' plugin requires 'Disciple Tools' theme to work. Please activate 'Disciple Tools' theme or make sure it is latest version.", "dt_nd_remote" );
-    if ( $wp_theme->get_template() === "disciple-tools-theme" ){
-        $message .= sprintf( esc_html__( 'Current Disciple Tools version: %1$s, required version: %2$s', 'dt_nd_remote' ), esc_html( $current_version ), esc_html( $dt_nd_remote_required_dt_theme_version ) );
-    }
-    // Check if it's been dismissed...
-    if ( ! get_option( 'dismissed-dt-nd-remote', false ) ) { ?>
-        <div class="notice notice-error notice-dt-nd-remote is-dismissible" data-notice="dt-nd-remote">
-            <p><?php echo esc_html( $message );?></p>
-        </div>
-        <script>
-            jQuery(function($) {
-                $( document ).on( 'click', '.notice-dt-nd-remote .notice-dismiss', function () {
-                    $.ajax( ajaxurl, {
-                        type: 'POST',
-                        data: {
-                            action: 'dismissed_notice_handler',
-                            type: 'dt-nd-remote',
-                            security: '<?php echo esc_html( wp_create_nonce( 'wp_rest_dismiss' ) ) ?>'
-                        }
-                    })
-                });
-            });
-        </script>
-    <?php }
-}
-
-
-/**
- * AJAX handler to store the state of dismissible notices.
- */
-if ( !function_exists( "dt_hook_ajax_notice_handler" )){
-    function dt_hook_ajax_notice_handler(){
-        check_ajax_referer( 'wp_rest_dismiss', 'security' );
-        if ( isset( $_POST["type"] ) ){
-            $type = sanitize_text_field( wp_unslash( $_POST["type"] ) );
-            update_option( 'dismissed-' . $type, true );
-        }
-    }
-}
