@@ -129,7 +129,7 @@ class DT_ND_Remote {
         // Admin and settings variables
         $this->token             = 'dt_nd_remote';
         $this->version             = '1.0';
-        
+
 
         // sample rest api class
         require_once( 'includes/rest-api.php' );
@@ -154,7 +154,7 @@ class DT_ND_Remote {
         if ( is_admin() ){
             // Check for plugin updates
             if ( ! class_exists( 'Puc_v4_Factory' ) ) {
-                require( get_template_directory() . '/dt-core/libraries/plugin-update-checker/plugin-update-checker.php' );
+                require( 'includes/admin/plugin-update-checker/plugin-update-checker.php' );
             }
             /**
              * Below is the publicly hosted .json file that carries the version information. This file can be hosted
@@ -167,7 +167,6 @@ class DT_ND_Remote {
              * @todo It is recommended to host this version control file outside the project itself. Github is a good option for delivering static json.
              */
 
-            /***** @todo remove from here
 
             $hosted_json = "https://raw.githubusercontent.com/DiscipleTools/disciple-tools-version-control/master/disciple-tools-network-dashboard-remote-version-control.json"; // @todo change this url
             Puc_v4_Factory::buildUpdateChecker(
@@ -176,7 +175,6 @@ class DT_ND_Remote {
                 'disciple-tools-network-dashboard-remote'
             );
 
-            ********* @todo to here */
 
         }
 
