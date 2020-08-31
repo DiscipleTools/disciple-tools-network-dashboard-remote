@@ -100,13 +100,18 @@ class DT_ND_Remote {
      */
     private function includes() {
         require_once( 'includes/site-link-post-type.php' );
-        require_once( 'includes/shortcode.php' );
+        require_once( 'includes/site-link-customization.php');
+        require_once( 'includes/log.php' );
+        require_once( 'includes/rest-api.php' );
+
         require_once( 'includes/header-script.php' );
+        require_once( 'includes/shortcode.php' );
         require_once( 'includes/site-profile.php' );
 
-        if ( is_admin() ) {
-            require_once( 'includes/admin/admin-menu-and-tabs.php' );
-        }
+        // @todo add admin area.
+//        if ( is_admin() ) {
+//            require_once( 'includes/admin/admin-menu-and-tabs.php' );
+//        }
     }
 
     /**
@@ -118,23 +123,10 @@ class DT_ND_Remote {
      */
     private function setup() {
 
-        // Main plugin directory path and URI.
-        $this->dir_path     = trailingslashit( plugin_dir_path( __FILE__ ) );
-        $this->dir_uri      = trailingslashit( plugin_dir_url( __FILE__ ) );
-
-        // Plugin directory paths.
-        $this->includes_path      = trailingslashit( $this->dir_path . 'includes' );
-
-        // Plugin directory URIs.
-        $this->img_uri      = trailingslashit( $this->dir_uri . 'img' );
-
         // Admin and settings variables
         $this->token             = 'dt_nd_remote';
         $this->version             = '1.0';
 
-        // sample rest api class
-        require_once( 'includes/rest-api.php' );
-        require_once( 'includes/custom-site-to-site-links.php' );
     }
 
     /**
