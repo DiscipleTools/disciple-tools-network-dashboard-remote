@@ -47,55 +47,45 @@ class DT_ND_Remote_Endpoints
 
 
     public function rest_log( WP_REST_Request $request ) {
-        $params = $request->get_params();
+        /* VERIFY REQUIRED PARAMS AND SANITIZE */
+
         $sites = Site_Link_System::get_list_of_sites_by_type(['network_dashboard_sending'], 'post_ids');
         if ( empty( $sites ) ) {
             return new WP_Error(__METHOD__, 'No sites configured for Network Dashboard', [ 'status' => 418 ]);
         }
 
-        // @todo test if all required fields are present
-//        if ( ! ( isset( $params['action'] ) && ! empty( $params['action' ] ) )  ) {
-//            dt_write_log( new WP_Error(__METHOD__, 'Required parameter missing.' ) );
-//            return false;
-//        }
+        $params = $request->get_params();
+        if ( ! isset( $params['action'] ) || empty( $params['action'] ) ) {
+            return new WP_Error(__METHOD__, 'No action parameter found', [ 'status' => 400 ]);
+        }
+        if ( ! isset( $params['category'] ) || empty( $params['category'] ) ) {
+            return new WP_Error(__METHOD__, 'No action parameter found', [ 'status' => 400 ]);
+        }
+
+        /* BUILD DATA PACKET FOR POSTING */
         /**
-         * Expects:
-         * $params['action'] (required)
-         * $params['group_size'] (optional)
-         */
-
-        // @todo sanitize submitted fields.
-
-
-        // @todo post to network dashboard
-        /**
-         * Post Activity Log
-         *
-         * @param $data
-         *
-         * @example
          * $data = [
-            [
-                'site_id' => dt_network_site_id(),
-                'action' => 'action',
-                'category' => 'complete',
-                'location_type' => 'complete', // ip, grid, lnglat
-                'location_value' => [
-                    'lng' => '-104.968',
-                    'lat' => '39.7075',
-                    'level' => 'admin2',
-                    'label' => 'Denver, Colorado, US',
-                    'grid_id' => '100364508'
-                ], // ip, grid, lnglat
-                'payload' => [
-                    'initials' => 'CC',
-                    'group_size' => '3',
-                    'country' => 'United States',
-                    'language' => 'en',
-                    'note' => 'This is the full note'.time()
-                ],
-                'timestamp' => time()
-            ]
+        [
+            'site_id' => dt_network_site_id(),
+            'action' => 'action',
+            'category' => 'complete',
+            'location_type' => 'complete', // ip, grid, lnglat
+            'location_value' => [
+                'lng' => '-104.968',
+                'lat' => '39.7075',
+                'level' => 'admin2',
+                'label' => 'Denver, Colorado, US',
+                'grid_id' => '100364508'
+            ], // ip, grid, lnglat
+            'payload' => [
+                'initials' => 'CC',
+                'group_size' => '3',
+                'country' => 'United States',
+                'language' => 'en',
+                'note' => 'This is the full note'.time()
+            ],
+            'timestamp' => time()
+        ]
         ];
          */
         $data = [
@@ -103,20 +93,56 @@ class DT_ND_Remote_Endpoints
                 'site_id' => dt_network_site_id(),
                 'action' => $params['action'],
                 'category' => $params['category'],
-                'location_type' => 'complete', // ip, grid, lnglat
-                'location_value' => [
-                    'lng' => '-104.968',
-                    'lat' => '39.7075',
-                    'level' => 'admin2',
-                    'label' => 'Denver, Colorado, US',
-                    'grid_id' => '100364508'
-                ], // ip, grid, lnglat
-                'payload' => $params['values'],
+                'location_type' => '',
+                'location_value' => '',
+                'payload' => [],
                 'timestamp' => time()
             ]
         ];
 
+        // extra data- variables
+        $keys = array_keys($params);
+        foreach( $keys as $key ){
+            if ( 'data' === substr( $key, 0, 4 ) ){
+                $explode = explode('-', $key );
+                if ( ! isset( $explode[1] ) ) {
+                    continue;
+                }
+                $data[0]['payload'][$explode[1]] = $params[$key];
+            }
+        }
 
+        // set location info (ip, grid, complete)
+        if ( isset( $params['location_type'] ) && 'complete' === $params['location_type'] ) {
+            $data[0]['location_type'] = 'complete';
+            $default_values = [
+                'lng' => '',
+                'lat' => '',
+                'level' => '',
+                'label' => '',
+                'grid_id' => ''
+            ];
+            $data[0]['location_value'] = wp_parse_args($params['location_type'], $default_values );
+        }
+        else if ( isset( $params['location_type'] ) && 'grid' === $params['location_type'] ) {
+            $data[0]['location_type'] = 'grid';
+            $data[0]['location_value'] = $params['grid_id'];
+        } else {
+            $data[0]['location_type'] = 'ip';
+            $ip = '';
+            if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) )   //check ip from share internet
+            {
+                $ip = sanitize_text_field( wp_unslash( $_SERVER['HTTP_CLIENT_IP'] ) );
+            } else if ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) )   //to check ip is pass from proxy
+            {
+                $ip = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) );
+            } else if ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
+                $ip = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
+            }
+            $data[0]['location_value'] = $ip;
+        }
+
+        /* POST DATA TO ALL AVAILABLE NETWORK DASHBOARD CONNECTIONS */
         foreach( $sites as $site ) {
             $site_vars = Site_Link_System::get_site_connection_vars( $site );
 
@@ -129,7 +155,6 @@ class DT_ND_Remote_Endpoints
             ];
             $response = wp_remote_post( 'https://' . $site_vars['url'] . '/wp-content/plugins/disciple-tools-network-dashboard/activity/log.php', $args );
 
-            dt_write_log('remote post');
             if ( ! is_wp_error( $response ) ) {
                 dt_write_log( json_decode( $response['body'], true ) );
             } else {
@@ -137,9 +162,7 @@ class DT_ND_Remote_Endpoints
                 dt_write_log($site_vars);
             }
         }
-
-
-        return $params;
+        return $data;
     }
 
 }
