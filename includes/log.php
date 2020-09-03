@@ -61,6 +61,7 @@ class Network_Dashboard_Remote_Log {
         }
 
         /* POST DATA TO ALL AVAILABLE NETWORK DASHBOARD CONNECTIONS */
+        $reply = [];
         foreach( $sites as $site ) {
             $site_vars = Site_Link_System::get_site_connection_vars( $site );
 
@@ -75,12 +76,14 @@ class Network_Dashboard_Remote_Log {
 
             if ( ! is_wp_error( $response ) ) {
                 dt_write_log( json_decode( $response['body'], true ) );
+                $reply[] = json_decode( $response['body'], true );
             } else {
                 dt_write_log($response);
                 dt_write_log($site_vars);
+                $reply[] = true;
             }
         }
-        return $data;
+        return $reply;
     }
 
     public static function get_real_ip_address() {
