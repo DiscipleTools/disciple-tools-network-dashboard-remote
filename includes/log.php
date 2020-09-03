@@ -75,12 +75,12 @@ class Network_Dashboard_Remote_Log {
             $response = wp_remote_post( 'https://' . $site_vars['url'] . '/wp-content/plugins/disciple-tools-network-dashboard/activity/log.php', $args );
 
             if ( ! is_wp_error( $response ) ) {
-                dt_write_log( json_decode( $response['body'], true ) );
-                $reply[] = json_decode( $response['body'], true );
-            } else {
-                dt_write_log($response);
-                dt_write_log($site_vars);
+//                dt_write_log( json_decode( $response['body'], true ) );
                 $reply[] = true;
+            } else {
+//                dt_write_log($response);
+//                dt_write_log($site_vars);
+                $reply[] = $response;
             }
         }
         return $reply;
