@@ -72,7 +72,7 @@ class Network_Dashboard_Remote_Log {
                     'data' => $data
                 ]
             ];
-            $response = wp_remote_post( 'https://' . $site_vars['url'] . '/wp-content/plugins/disciple-tools-network-dashboard/activity/log.php', $args );
+            $response = wp_remote_post( 'https://' . $site_vars['url'] . '/wp-content/plugins/disciple-tools-network-dashboard/public/log.php', $args );
 
             if ( ! is_wp_error( $response ) ) {
 //                dt_write_log( json_decode( $response['body'], true ) );
