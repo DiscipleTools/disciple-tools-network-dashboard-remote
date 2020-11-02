@@ -4,8 +4,8 @@
  * Gets or Creates Network Site Profile
  * @return array
  */
-if ( ! function_exists( 'dt_network_site_profile' ) ) {
-    function dt_network_site_profile() {
+if ( ! function_exists( 'dt_remote_network_site_profile' ) ) {
+    function dt_remote_network_site_profile() {
         $profile = get_option( 'dt_site_profile' );
 
         if ( empty( $profile ) || empty( $profile['partner_id'] || ! isset( $profile['partner_id'] ) ) ) {
@@ -18,9 +18,9 @@ if ( ! function_exists( 'dt_network_site_profile' ) ) {
             update_option( 'dt_site_profile', $profile, true );
         }
 
-        $profile['system'] = dt_network_site_system();
+        $profile['system'] = dt_remote_network_site_system();
 
-        $profile['languages'] = dt_get_option( "dt_working_languages" );
+        $profile['languages'] = [];
 
         return $profile;
     }
@@ -46,20 +46,11 @@ if ( ! function_exists( 'dt_network_site_id' ) ) {
  * @return array
  * @throws Exception
  */
-if ( ! function_exists( 'dt_network_site_system' ) ) {
-    function dt_network_site_system() : array {
+if ( ! function_exists( 'dt_remote_network_site_system' ) ) {
+    function dt_remote_network_site_system() : array {
         global $wp_version, $wp_db_version;
 
         $system = [
-            'network_dashboard_version' => DT_Network_Dashboard::get_instance()->version ?? 0,
-            'network_dashboard_migration' => get_option( 'dt_network_dashboard_migration_number' ),
-            'network_dashboard_migration_lock' => get_option( 'dt_network_dashboard_migration_lock' ),
-            'dt_theme_version' => Disciple_Tools::instance()->version ?? 0,
-            'dt_theme_migration' => get_option( 'dt_migration_number' ),
-            'dt_theme_migration_lock' => get_option( 'dt_migration_lock' ),
-            'dt_mapping_migration' => get_option( 'dt_mapping_module_migration_number' ),
-            'dt_mapping_migration_lock' => get_option( 'dt_mapping_module_migration_lock' ),
-            'has_mapbox_key' => ( DT_Mapbox_API::get_key() ) ? 'yes' : 'no',
             'php_version' => phpversion(),
             'wp_version' => $wp_version,
             'wp_db_version' => $wp_db_version,

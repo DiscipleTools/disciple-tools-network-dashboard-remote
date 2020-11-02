@@ -62,7 +62,7 @@ class DT_ND_Remote_Endpoints
         if ( is_wp_error( $params ) ) {
             return $params;
         }
-        return dt_network_site_profile();
+        return dt_remote_network_site_profile();
     }
     /**
      * Process the standard security checks on an api request to network endpoints.
