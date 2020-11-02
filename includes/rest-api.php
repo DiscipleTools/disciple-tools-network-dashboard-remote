@@ -60,10 +60,7 @@ class DT_ND_Remote_Endpoints
     public function profile( WP_REST_Request $request ) {
         $params = $this->process_token( $request );
         if ( is_wp_error( $params ) ) {
-            return [
-                'status' => 'FAIL',
-                'error' => $params,
-            ];
+            return $params;
         }
         return dt_network_site_profile();
     }
