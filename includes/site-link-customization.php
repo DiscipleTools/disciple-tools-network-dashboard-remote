@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; } // Exit if accessed directly
 // Adds the type of network connection to the site link system
 add_filter( 'site_link_type', 'dt_nd_remote_site_link_type', 10, 1 );
 function dt_nd_remote_site_link_type( $type ) {
-    $type['network_dashboard_sending'] = __('Network Dashboard Sending Only');
+    $type['network_dashboard_sending'] = __( 'Network Dashboard Sending Only' );
     return $type;
 }
 

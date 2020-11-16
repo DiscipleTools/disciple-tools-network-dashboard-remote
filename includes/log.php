@@ -2,16 +2,16 @@
 
 class Network_Dashboard_Remote_Log {
     public static function log( $params ) {
-        $sites = Site_Link_System::get_list_of_sites_by_type(['network_dashboard_sending'], 'post_ids');
+        $sites = Site_Link_System::get_list_of_sites_by_type( [ 'network_dashboard_sending' ], 'post_ids' );
         if ( empty( $sites ) ) {
-            return new WP_Error(__METHOD__, 'No sites configured for Network Dashboard', [ 'status' => 418 ]);
+            return new WP_Error( __METHOD__, 'No sites configured for Network Dashboard', [ 'status' => 418 ] );
         }
 
         if ( ! isset( $params['action'] ) || empty( $params['action'] ) ) {
-            return new WP_Error(__METHOD__, 'No action parameter found', [ 'status' => 400 ]);
+            return new WP_Error( __METHOD__, 'No action parameter found', [ 'status' => 400 ] );
         }
         if ( ! isset( $params['category'] ) || empty( $params['category'] ) ) {
-            return new WP_Error(__METHOD__, 'No action parameter found', [ 'status' => 400 ]);
+            return new WP_Error( __METHOD__, 'No action parameter found', [ 'status' => 400 ] );
         }
 
         /* BUILD DATA PACKET FOR POSTING */
@@ -28,10 +28,10 @@ class Network_Dashboard_Remote_Log {
         ];
 
         // extra data- variables
-        $keys = array_keys($params);
-        foreach( $keys as $key ){
+        $keys = array_keys( $params );
+        foreach ( $keys as $key ){
             if ( 'data' === substr( $key, 0, 4 ) ){
-                $explode = explode('-', $key );
+                $explode = explode( '-', $key );
                 if ( ! isset( $explode[1] ) ) {
                     continue;
                 }
@@ -49,7 +49,7 @@ class Network_Dashboard_Remote_Log {
                 'label' => '',
                 'grid_id' => ''
             ];
-            $data[0]['location_value'] = wp_parse_args($params['location_type'], $default_values );
+            $data[0]['location_value'] = wp_parse_args( $params['location_type'], $default_values );
         }
         else if ( isset( $params['location_type'] ) && 'grid' === $params['location_type'] ) {
             $data[0]['location_type'] = 'grid';
@@ -62,7 +62,7 @@ class Network_Dashboard_Remote_Log {
 
         /* POST DATA TO ALL AVAILABLE NETWORK DASHBOARD CONNECTIONS */
         $reply = [];
-        foreach( $sites as $site ) {
+        foreach ( $sites as $site ) {
             $site_vars = Site_Link_System::get_site_connection_vars( $site );
 
             $args = [
