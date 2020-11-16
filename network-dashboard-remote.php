@@ -3,7 +3,7 @@
  * Plugin Name: Disciple Tools - Network Dashboard Remote
  * Plugin URI: https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote
  * Description: Disciple Tools - Network Dashboard Remote is an extension for non-disciple.tools wordpress sites for submitting activity to the network dashboard
- * Version:  1.0
+ * Version:  1.1
  * Author URI: https://github.com/DiscipleTools
  * GitHub Plugin URI: https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote
  * Requires at least: 4.7.0
@@ -100,7 +100,7 @@ class DT_ND_Remote {
      */
     private function includes() {
         require_once( 'includes/site-link-post-type.php' );
-        require_once( 'includes/site-link-customization.php');
+        require_once( 'includes/site-link-customization.php' );
         require_once( 'includes/log.php' );
         require_once( 'includes/rest-api.php' );
 
@@ -108,10 +108,6 @@ class DT_ND_Remote {
         require_once( 'includes/shortcode.php' );
         require_once( 'includes/site-profile.php' );
 
-        // @todo add admin area.
-//        if ( is_admin() ) {
-//            require_once( 'includes/admin/admin-menu-and-tabs.php' );
-//        }
     }
 
     /**
@@ -125,7 +121,7 @@ class DT_ND_Remote {
 
         // Admin and settings variables
         $this->token             = 'dt_nd_remote';
-        $this->version             = '1.0';
+        $this->version             = '1.1';
 
     }
 

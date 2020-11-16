@@ -14,7 +14,7 @@ function dt_nd_logging_script(){
                 dataType: "json",
                 url: '<?php echo esc_url_raw( rest_url() ) ?>movement_logging/v1/log',
                 beforeSend: function(xhr) {
-                    xhr.setRequestHeader('X-WP-Nonce', '<?php echo wp_create_nonce( 'wp_rest' ) ?>' );
+                    xhr.setRequestHeader('X-WP-Nonce', '<?php echo esc_attr( wp_create_nonce( 'wp_rest' ) ) ?>' );
                 },
             })
                 .done(function(response){

@@ -5,7 +5,7 @@ set -e
 cd "$(dirname "${BASH_SOURCE[0]}")/../../../"
 
 if [ "$(php -r 'echo version_compare( phpversion(), "7.0", ">=" ) ? 1 : 0;')" != 1 ] ; then
-    vendor/bin/phpcs disciple-tools-network-dashboard-remote.php
+    vendor/bin/phpcs network-dashboard-remote.php
     exit
 fi
 

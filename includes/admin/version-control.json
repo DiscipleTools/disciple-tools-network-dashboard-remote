@@ -1,15 +1,15 @@
 {
   "name": "Disciple Tools - Network Dashboard Remote",
 
-  "version": "1.0",
-  "download_url": "https://github.com/DiscipleTools/disciple-tools-network-dashboard/releases/download/1.0/disciple-tools-network-dashboard-remote.zip",
+  "version": "1.1",
+  "download_url": "https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote/releases/latest/download/disciple-tools-network-dashboard-remote.zip",
   "sections": {
     "description": "The Network Dashboard Remote plugin extends to non-disciple.tools Wordpress systems a simple REST and authentication capacity to log movement activity to the network dashboard.",
     "installation": "(Required) You must have Disciple.Tools Theme installed before using this plugin. Once Disciple.Tools is installed, you can use the normal Plugin system to install the plugin.",
     "changelog": "Initialization of the plugin."
   },
-  "last_updated": "2020-08",
-  "upgrade_notice": "Initialization",
+  "last_updated": "2020-11",
+  "upgrade_notice": "Compatible with Disciple.Tools 1.0 Release",
 
   "requires": "4.7",
   "tested": "5.5",
@@ -24,7 +24,7 @@
   "homepage": "https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote",
   "issues_url": "https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote/issues",
   "projects_url": "https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote/projects",
-  "wiki_url": "",
+  "wiki_url": "https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote/wiki",
   "license_url": "https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote/blob/master/LICENSE",
   "readme_url": "https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote/blob/master/README.md"
 }

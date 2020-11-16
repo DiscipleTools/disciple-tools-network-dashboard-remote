@@ -2,7 +2,7 @@
 /**
  * Sets up short code option of adding tracking to a Wordpress page
  */
-add_shortcode('movement_logging', 'dt_nd_movement_logging_shortcode');
+add_shortcode( 'movement_logging', 'dt_nd_movement_logging_shortcode' );
 function dt_nd_movement_logging_shortcode( $params = [] ){
 
     // extra data- variables
@@ -16,9 +16,9 @@ function dt_nd_movement_logging_shortcode( $params = [] ){
         $params['scrolled'] = 'no';
     }
 
-    $params = array_map('sanitize_text_field', wp_unslash( $params ) );
+    $params = array_map( 'sanitize_text_field', wp_unslash( $params ) );
 
-    $json_array = json_encode($params);
+    $json_array = json_encode( $params );
 
     if ( "yes" === $params['scrolled'] ) {
         return "<script>
