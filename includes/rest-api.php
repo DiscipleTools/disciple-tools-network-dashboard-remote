@@ -39,6 +39,7 @@ class DT_ND_Remote_Endpoints
                 [
                     'methods'  => WP_REST_Server::CREATABLE,
                     'callback' => [ $this, 'rest_log' ],
+                    'permission_callback' => '__return_true',
                 ],
             ]
         );
@@ -47,6 +48,7 @@ class DT_ND_Remote_Endpoints
             'dt-public/v1', '/network_dashboard/profile', [
                 'methods'  => 'POST',
                 'callback' => [ $this, 'profile' ],
+                'permission_callback' => '__return_true',
             ]
         );
     }
