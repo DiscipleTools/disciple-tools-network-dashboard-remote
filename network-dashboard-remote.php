@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Disciple Tools - Network Dashboard Remote
+ *Plugin Name: Disciple.Tools - Network Dashboard Remote
  * Plugin URI: https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote
  * Description: Disciple Tools - Network Dashboard Remote is an extension for non-disciple.tools wordpress sites for submitting activity to the network dashboard
  * Version:  1.1
