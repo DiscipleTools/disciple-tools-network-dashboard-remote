@@ -2,7 +2,7 @@
 /**
  *Plugin Name: Disciple.Tools - Network Dashboard Remote
  * Plugin URI: https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote
- * Description: Disciple Tools - Network Dashboard Remote is an extension for non-disciple.tools wordpress sites for submitting activity to the network dashboard
+ * Description: Disciple.Tools - Network Dashboard Remote is an extension for non-disciple.tools wordpress sites for submitting activity to the network dashboard
  * Version:  1.1
  * Author URI: https://github.com/DiscipleTools
  * GitHub Plugin URI: https://github.com/DiscipleTools/disciple-tools-network-dashboard-remote
@@ -192,7 +192,7 @@ class DT_ND_Remote {
     public static function activation() {
 
         // Confirm 'Administrator' has 'manage_dt' privilege. This is key in 'remote' configuration when
-        // Disciple Tools theme is not installed, otherwise this will already have been installed by the Disciple Tools Theme
+        // Disciple.Tools theme is not installed, otherwise this will already have been installed by the Disciple.Tools Theme
         $role = get_role( 'administrator' );
         if ( !empty( $role ) ) {
             $role->add_cap( 'manage_dt' ); // gives access to dt plugin options
