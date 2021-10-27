@@ -31,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function dt_nd_remote() {
     $wp_theme = wp_get_theme();
 
-    $is_theme_dt = strpos( $wp_theme->get_template(), "disciple-tools-theme" ) !== false || $wp_theme->name === "Disciple Tools";
+    $is_theme_dt = class_exists( "Disciple_Tools" );
     if ( ! $is_theme_dt ) {
         return DT_ND_Remote::get_instance();
     }
