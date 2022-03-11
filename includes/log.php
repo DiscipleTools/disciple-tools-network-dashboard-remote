@@ -64,6 +64,10 @@ class Network_Dashboard_Remote_Log {
         $reply = [];
         foreach ( $sites as $site ) {
             $site_vars = Site_Link_System::get_site_connection_vars( $site );
+            if ( is_wp_error($site_vars) ) {
+                dt_write_log($site_vars);
+                return $site_vars;
+            }
 
             $args = [
                 'method' => 'POST',
