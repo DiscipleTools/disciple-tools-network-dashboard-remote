@@ -116,6 +116,18 @@ if ( ! class_exists( 'Site_Link_System' ) ) {
             return get_option( $prefix . '_api_keys', [] );
         }
 
+        public static function get_site_key_by_dev_key( $dev_key ) {
+            $keys = self::get_site_keys();
+            if ( ! empty( $keys ) ) {
+                foreach ( $keys as $key ) {
+                    if ( $key['dev_key'] === $dev_key ) {
+                        return $key;
+                    }
+                }
+            }
+            return false;
+        }
+
         /**
          * GET A LIST OF SITES BY CONNECTION TYPE
          *
@@ -195,14 +207,17 @@ if ( ! class_exists( 'Site_Link_System' ) ) {
              */
             // challenge https connection
             if ( WP_DEBUG !== true ) {
-                if ( !isset( $_SERVER['HTTPS'] ) ) {
-                    dt_write_log( __METHOD__ . ': Server does not have the HTTPS parameter set.' );
+                $disable_site_link_https_check = apply_filters( 'dt_disable_site_link_https_check', false );
+                if ( empty( $disable_site_link_https_check ) ){
+                    if ( !isset( $_SERVER['HTTPS'] ) ){
+                        dt_write_log( __METHOD__ . ': Server does not have the HTTPS parameter set.' );
 
-                    return false;
-                } elseif ( !( 'on' === $_SERVER['HTTPS'] ) ) {
-                    dt_write_log( __METHOD__ . ': Failed https challenge' );
+                        return false;
+                    } elseif ( !( 'on' === $_SERVER['HTTPS'] ) ){
+                        dt_write_log( __METHOD__ . ': Failed https challenge' );
 
-                    return false;
+                        return false;
+                    }
                 }
             }
 
@@ -1042,7 +1057,7 @@ if ( ! class_exists( 'Site_Link_System' ) ) {
             }
             $uri = $this->get_url_path();
 
-            if ( $uri && ( strpos( $uri, 'edit.php' ) && strpos( $uri, 'post_type=site_link_system' ) ) || ( strpos( $uri, 'post-new.php' ) && strpos( $uri, 'post_type=site_link_system' ) ) ) : ?>
+            if ( $uri && ( ( strpos( $uri, 'edit.php' ) && strpos( $uri, 'post_type=site_link_system' ) ) || ( strpos( $uri, 'post-new.php' ) && strpos( $uri, 'post_type=site_link_system' ) ) ) ) : ?>
                 <script>
                     jQuery(function($) {
                         $(`<div><a href="https://disciple.tools/user-docs/getting-started-info/admin/site-links/" style="margin-bottom:15px;" target="_blank">
@@ -1494,12 +1509,15 @@ if ( ! class_exists( 'Site_Link_System' ) ) {
 
         // Adds the type of connection to the site link system
         public function default_site_link_type( $type ){
-            $post_types = DT_Posts::get_post_types();
-            foreach ( $post_types ?? [] as $post_type ){
-                $post_type_settings = DT_Posts::get_post_settings( $post_type, false );
+            if ( class_exists( 'DT_Posts' ) ){
+                $post_types = DT_Posts::get_post_types();
+                foreach ( $post_types ?? [] as $post_type ){
+                    $post_type_settings = DT_Posts::get_post_settings( $post_type, false );
 
-                $type['create_' . $post_type] = sprintf( __( 'Create %s', 'disciple_tools' ), $post_type_settings['label_plural'] );
-                $type['create_update_' . $post_type] = sprintf( __( 'Create and Update %s', 'disciple_tools' ), $post_type_settings['label_plural'] );
+                    $type['create_' . $post_type] = sprintf( __( 'Create %s', 'disciple_tools' ), $post_type_settings['label_plural'] );
+                    $type['create_update_' . $post_type] = sprintf( __( 'Create and Update %s', 'disciple_tools' ), $post_type_settings['label_plural'] );
+                }
+                $type['all_permissions'] = 'All permissions';
             }
 
             return $type;
@@ -1507,15 +1525,22 @@ if ( ! class_exists( 'Site_Link_System' ) ) {
 
         // Add the specific capabilities needed for the site to site linking.
         public function default_site_link_capabilities( $args ){
-            $post_types = DT_Posts::get_post_types();
-            foreach ( $post_types ?? [] as $post_type ){
-                if ( 'create_' . $post_type === $args['connection_type'] ){
-                    $args['capabilities'][] = 'create_' . $post_type;
+            if ( class_exists( 'DT_Posts' ) ){
+                $post_types = DT_Posts::get_post_types();
+                foreach ( $post_types ?? [] as $post_type ){
+                    if ( 'create_' . $post_type === $args['connection_type'] ){
+                        $args['capabilities'][] = 'create_' . $post_type;
+                    }
+                    if ( 'create_update_' . $post_type === $args['connection_type'] ){
+                        $args['capabilities'][] = 'create_' . $post_type;
+                        $args['capabilities'][] = 'update_any_' . $post_type;
+                    }
                 }
-                if ( 'create_update_' . $post_type === $args['connection_type'] ){
-                    $args['capabilities'][] = 'create_' . $post_type;
-                    $args['capabilities'][] = 'update_any_' . $post_type;
-                }
+            }
+            if ( 'all_permissions' === $args['connection_type'] ){
+                $existing_roles_permissions = Disciple_Tools_Roles::get_dt_roles_and_permissions();
+                $administrator_permissions = array_keys( $existing_roles_permissions['administrator']['permissions'] );
+                $args['capabilities'] = $administrator_permissions;
             }
 
             return $args;
@@ -1574,6 +1599,5 @@ if ( ! class_exists( 'Site_Link_System' ) ) {
             add_filter( 'site_link_type', [ $this, 'default_site_link_type' ], 10, 1 );
             add_filter( 'site_link_type_capabilities', [ $this, 'default_site_link_capabilities' ], 10, 1 );
         } // End __construct()
-
     } // End Class
 }
